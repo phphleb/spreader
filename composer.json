@@ -1,0 +1,26 @@
+{
+  "name": "phphleb/spreader",
+  "description": "Allows you to choose the method to use the configs for PHP Micro-Framework HLEB",
+  "type": "library",
+  "keywords": [
+    "php"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Foma Tuturov",
+      "email": "fomiash@yandex.ru"
+    }
+  ],
+  "require": {
+    "php": ">=7.4.0",
+    "phphleb/framework": ">=1.5.73",
+    "phphleb/nicejson": "dev-main"
+  },
+  "autoload": {
+    "psr-4": {
+      "Phphleb\\Spreader\\": "/"
+    }
+  },
+  "minimum-stability": "dev"
+}
