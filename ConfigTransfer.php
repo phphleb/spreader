@@ -31,7 +31,7 @@ class ConfigTransfer implements TransferInterface
         }
         $class = "Phphleb\Spreader\Src\\" . self::$type . "ConfigTransfer";
 
-        $this->transferMethod = new $class(self::$type = self::FILE_TYPE ? $path : $target);
+        $this->transferMethod = new $class(self::$type === self::FILE_TYPE ? $path : $target);
     }
 
     public function saveIfNotExists(array $config): bool
