@@ -1,4 +1,4 @@
-### Sets the method to save various configs for Micro-Framework HLEB
+### Sets the method to save various configs* for Micro-Framework HLEB
 
 By default, saving to files does not require configuration.
 
@@ -18,10 +18,10 @@ define("HLEB_CONFIG_SPREADER_TYPE", "Db");
 /*
  |-----------------------------------------------------------------------------
  | The name of the current connection, matches will be grouped
- | with the overall configuration.
+ | with the overall configuration. Максимальное количество символов - 100.
  |-----------------------------------------------------------------------------
  | Имя текущего подключения, совпадения будут сгруппированы
- | с общей конфигурацией.
+ | с общей конфигурацией. Maximum character limit - 100.
  |-----------------------------------------------------------------------------
  */
 define("HLEB_CONFIG_SPREADER_NAME", "connection-name");
@@ -34,6 +34,9 @@ define("HLEB_SPREADER_TYPE_DB", "mysql.myname");
 
 ```
 The name of the table being created in the database is `spreader_configs`.
+
+
+\* - Сonfiguration files for libraries "hlogin", "ucaptcha" and others.
 
 ------------------------------
 

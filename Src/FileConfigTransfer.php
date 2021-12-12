@@ -11,7 +11,7 @@ class FileConfigTransfer implements TransferInterface
 
     private string $path;
 
-    public function __construct(string $path, string $target)
+    public function __construct(string $path)
     {
         $this->path = $path;
     }

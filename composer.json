@@ -15,7 +15,8 @@
   "require": {
     "php": ">=7.4.0",
     "phphleb/framework": ">=1.5.73",
-    "phphleb/nicejson": "dev-main"
+    "phphleb/nicejson": "dev-main",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {

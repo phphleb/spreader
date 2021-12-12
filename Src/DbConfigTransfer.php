@@ -8,6 +8,8 @@ use Hleb\Main\MainDB;
 
 class DbConfigTransfer implements TransferInterface
 {
+    private const DEFAULT_NAME = 'global';
+
     private string $tableName = "spreader_configs";
 
     private string $name;
@@ -16,13 +18,13 @@ class DbConfigTransfer implements TransferInterface
 
     private ?array $dbConfig;
 
-    public function __construct(string $name, string $target)
+    public function __construct(string $target)
     {
-        $this->name = $name;
-
-        $this->target = $target;
+        $this->name = (defined("HLEB_CONFIG_SPREADER_NAME") ? htmlentities(HLEB_CONFIG_SPREADER_NAME) : self::DEFAULT_NAME);
 
         $this->dbConfig = defined("HLEB_SPREADER_TYPE_DB") ? HLEB_PARAMETERS_FOR_DB[HLEB_SPREADER_TYPE_DB] : null;
+
+        $this->target = $target;
     }
 
     public function get(): array
@@ -99,7 +101,7 @@ class DbConfigTransfer implements TransferInterface
         if ($e !== null) {
             error_log($e->getMessage());
         }
-        return (bool)MainDB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(255) NOT NULL, content varchar(5000) NOT NULL, UNIQUE KEY _designation (designation) );", $this->dbConfig);
+        return (bool)MainDB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE KEY _designation (designation) );", $this->dbConfig);
     }
 
     private function getDataByDesignation(): ?string

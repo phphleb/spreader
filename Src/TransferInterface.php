@@ -6,8 +6,6 @@ namespace Phphleb\Spreader\Src;
 
 interface TransferInterface
 {
-    public function __construct(string $parameter, string $target);
-
     public function get(): array;
 
     public function saveIfNotExists(array $config): bool;
