@@ -31,12 +31,27 @@ class FileConfigTransfer implements TransferInterface
 
     public function save(array $config): bool
     {
-        return (bool)file_put_contents($this->path, (new JsonConverter($config))->get());
+        $this->createDirIfExists();
+        if (!file_exists($this->path)) {
+            $fp = fopen($this->path, "w");
+            $result = fwrite($fp, (new JsonConverter($config))->get());
+            fclose($fp);
+        } else {
+            $result = file_put_contents($this->path, (new JsonConverter($config))->get());
+        }
+        return (bool)$result;
     }
 
     public function remove(): bool
     {
         return unlink($this->path);
+    }
+
+    private function createDirIfExists() {
+        $directory = dirname($this->path);
+        if (!is_dir($directory)) {
+            mkdir($directory, 0775, true);
+        }
     }
 
 
