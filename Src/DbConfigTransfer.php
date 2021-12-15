@@ -25,17 +25,14 @@ class DbConfigTransfer implements TransferInterface
         $this->dbConfig = defined("HLEB_SPREADER_TYPE_DB") ? HLEB_PARAMETERS_FOR_DB[HLEB_SPREADER_TYPE_DB] : null;
 
         $this->target = $target;
+
+        $this->createTableIfNotExists();
     }
 
     public function get(): array
     {
         $result = [];
-        try {
-            $content = $this->getDataByDesignation();
-        } catch (\Throwable $e) {
-            $this->createTable($e);
-            return $result;
-        }
+        $content = $this->getDataByDesignation();
         if ($content) {
             $result = json_decode($content, true)[$this->target];
         }
@@ -45,17 +42,14 @@ class DbConfigTransfer implements TransferInterface
     public function saveIfNotExists(array $config): bool
     {
         $data = [];
-        $content = null;
-        try {
-            $content = $this->getDataByDesignation();
+        $content = $this->getDataByDesignation();
+        if ($content) {
             try {
                 $data = json_decode($content, true);
             } catch (\Throwable $e) {
                 error_log($e->getMessage());
                 return false;
             }
-        } catch (\Throwable $e) {
-            $this->createTable($e);
         }
         $data[$this->target] = $config;
         if (!$content) {
@@ -67,17 +61,14 @@ class DbConfigTransfer implements TransferInterface
     public function save(array $config): bool
     {
         $data = [];
-        $content = null;
-        try {
-            $content = $this->getDataByDesignation();
+        $content = $this->getDataByDesignation();
+        if ($content) {
             try {
                 $data = json_decode($content, true);
             } catch (\Throwable $e) {
                 error_log($e->getMessage());
                 return false;
             }
-        } catch (\Throwable $e) {
-            $this->createTable($e);
         }
         $data[$this->target] = $config;
         if (!$content) {
@@ -96,12 +87,12 @@ class DbConfigTransfer implements TransferInterface
         return true;
     }
 
-    private function createTable(?\Throwable $e = null): bool
+    private function createTableIfNotExists(): bool
     {
-        if ($e !== null) {
-            error_log($e->getMessage());
+        if (!(bool)MainDB::run("SHOW TABLES LIKE '{$this->tableName}'")->fetch()) {
+            return (bool)MainDB::db_query("CREATE TABLE {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE KEY _designation (designation) );", $this->dbConfig);
         }
-        return (bool)MainDB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE KEY _designation (designation) );", $this->dbConfig);
+        return true;
     }
 
     private function getDataByDesignation(): ?string
