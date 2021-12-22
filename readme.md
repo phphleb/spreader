@@ -5,12 +5,12 @@ By default, saving to files does not require configuration.
 To save to the database and use one config for several project replications.
 ```php
 // File ./start.hleb.php
-// File ./console
+
 /*
  |-----------------------------------------------------------------------------
- | Selecting the type of log storage ("File" or "Db")
+ | Selecting the type of configs storage ("File" or "Db")
  |-----------------------------------------------------------------------------
- | Выбор типа хранения логов ("File" или "Db")
+ | Выбор типа хранения конфигов ("File" или "Db")
  |-----------------------------------------------------------------------------
  */
 define("HLEB_CONFIG_SPREADER_TYPE", "Db");
@@ -27,7 +27,14 @@ define("HLEB_CONFIG_SPREADER_TYPE", "Db");
 define("HLEB_CONFIG_SPREADER_NAME", "connection-name");
 ```
 ```php
-// File /database/dbase.config.php
+// File ./console
+
+define("HLEB_CONFIG_SPREADER_TYPE", "Db");
+define("HLEB_CONFIG_SPREADER_NAME", "connection-name");
+
+```
+```php
+// File ./database/dbase.config.php
 
 // Optionally, you can select the type of connection from the resource /database/dbase.config.php
 define("HLEB_SPREADER_TYPE_DB", "mysql.myname");
@@ -36,7 +43,7 @@ define("HLEB_SPREADER_TYPE_DB", "mysql.myname");
 The name of the table being created in the database is `spreader_configs`.
 
 
-\* - Сonfiguration files for libraries "hlogin", "ucaptcha" and others.
+\* - Сonfiguration files for libraries "hlogin", "ucaptcha", "muller" and others.
 
 ------------------------------
 
