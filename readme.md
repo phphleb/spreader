@@ -4,8 +4,8 @@ By default, saving to files does not require configuration.
 
 To save to the database and use one config for several project replications.
 ```php
-// File start.hleb.php
-
+// File ./start.hleb.php
+// File ./console
 /*
  |-----------------------------------------------------------------------------
  | Selecting the type of log storage ("File" or "Db")

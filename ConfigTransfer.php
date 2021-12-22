@@ -39,7 +39,7 @@ class ConfigTransfer implements TransferInterface
         return $this->transferMethod->saveIfNotExists($config);
     }
 
-    public function get(): array
+    public function get(): ?array
     {
         return $this->transferMethod->get();
     }

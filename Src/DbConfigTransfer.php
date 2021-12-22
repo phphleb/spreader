@@ -29,12 +29,12 @@ class DbConfigTransfer implements TransferInterface
         $this->createTableIfNotExists();
     }
 
-    public function get(): array
+    public function get(): ?array
     {
         $result = [];
         $content = $this->getDataByDesignation();
         if ($content) {
-            $result = json_decode($content, true)[$this->target];
+            $result = json_decode($content, true)[$this->target] ?? null;
         }
         return $result;
     }

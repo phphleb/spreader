@@ -16,9 +16,17 @@ class FileConfigTransfer implements TransferInterface
         $this->path = $path;
     }
 
-    public function get(): array
+    public function get(): ?array
     {
-        return json_decode(file_get_contents($this->path), true);
+        $content = @file_get_contents($this->path);
+        if (!$content) {
+            return null;
+        }
+        $result = json_decode($content, true);
+        if (!$result) {
+            return null;
+        }
+        return $result;
     }
 
     public function saveIfNotExists(array $config): bool
