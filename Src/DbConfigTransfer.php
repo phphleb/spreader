@@ -14,27 +14,32 @@ class DbConfigTransfer implements TransferInterface
 
     private string $name;
 
-    private string $target;
+    private ?string $target = null;
 
     private ?array $dbConfig;
 
-    public function __construct(string $target)
+    private ?array $data = null;
+
+    public function __construct()
     {
         $this->name = (defined("HLEB_CONFIG_SPREADER_NAME") ? htmlentities(HLEB_CONFIG_SPREADER_NAME) : self::DEFAULT_NAME);
 
         $this->dbConfig = defined("HLEB_SPREADER_TYPE_DB") ? HLEB_PARAMETERS_FOR_DB[HLEB_SPREADER_TYPE_DB] : null;
 
-        $this->target = $target;
-
         $this->createTableIfNotExists();
     }
 
-    public function get(): ?array
+    public function get($isUnaltered = false): ?array
     {
         $result = [];
+        if ($isUnaltered && !is_null($this->data)) {
+            return $this->data[$this->target] ?? null;
+        }
         $content = $this->getDataByDesignation();
         if ($content) {
-            $result = json_decode($content, true)[$this->target] ?? null;
+            $data = json_decode($content, true);
+            $this->data = $isUnaltered ? $data : null;
+            $result = $data[$this->target] ?? null;
         }
         return $result;
     }
@@ -85,6 +90,13 @@ class DbConfigTransfer implements TransferInterface
             error_log($e->getMessage());
         }
         return true;
+    }
+
+    public function setTarget(string $path, string $target): TransferInterface
+    {
+        $this->target = $target;
+
+        return $this;
     }
 
     private function createTableIfNotExists(): bool

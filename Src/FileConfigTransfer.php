@@ -9,14 +9,9 @@ use Phphleb\Nicejson\JsonConverter;
 class FileConfigTransfer implements TransferInterface
 {
 
-    private string $path;
+    private ?string $path = null;
 
-    public function __construct(string $path)
-    {
-        $this->path = $path;
-    }
-
-    public function get(): ?array
+    public function get($isUnaltered = false): ?array
     {
         $content = @file_get_contents($this->path);
         if (!$content) {
@@ -53,6 +48,13 @@ class FileConfigTransfer implements TransferInterface
     public function remove(): bool
     {
         return unlink($this->path);
+    }
+
+    public function setTarget(string $path, string $libName): TransferInterface
+    {
+        $this->path = $path;
+
+        return $this;
     }
 
     private function createDirIfExists() {

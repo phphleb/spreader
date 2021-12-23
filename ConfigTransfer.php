@@ -19,11 +19,9 @@ class ConfigTransfer implements TransferInterface
     private TransferInterface $transferMethod;
 
     /**
-     * @param string $path - path to the saved file.
-     * @param string $target - the name of the library that requests saving.
      * @throws \ErrorException
      */
-    public function __construct(string $path, string $target)
+    public function __construct()
     {
         self::$type = defined("HLEB_CONFIG_SPREADER_TYPE") ? HLEB_CONFIG_SPREADER_TYPE : self::FILE_TYPE;
         if (!in_array(self::$type, self::ALL_TYPES)) {
@@ -31,7 +29,7 @@ class ConfigTransfer implements TransferInterface
         }
         $class = "Phphleb\Spreader\Src\\" . self::$type . "ConfigTransfer";
 
-        $this->transferMethod = new $class(self::$type === self::FILE_TYPE ? $path : $target);
+        $this->transferMethod = new $class();
     }
 
     public function saveIfNotExists(array $config): bool
@@ -39,9 +37,9 @@ class ConfigTransfer implements TransferInterface
         return $this->transferMethod->saveIfNotExists($config);
     }
 
-    public function get(): ?array
+    public function get($isUnaltered = false): ?array
     {
-        return $this->transferMethod->get();
+        return $this->transferMethod->get($isUnaltered);
     }
 
     public function save(array $config): bool
@@ -52,6 +50,18 @@ class ConfigTransfer implements TransferInterface
     public function remove(): bool
     {
         return $this->transferMethod->remove();
+    }
+
+    /**
+     * @param string $path - path to the saved file.
+     * @param string $target - the name of the library that requests saving.
+     * @return TransferInterface
+     */
+    public function setTarget(string $path, string $target): TransferInterface
+    {
+        $this->transferMethod->setTarget($path, $target);
+
+        return $this;
     }
 
 }
