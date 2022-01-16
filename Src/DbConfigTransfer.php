@@ -101,8 +101,10 @@ class DbConfigTransfer implements TransferInterface
 
     private function createTableIfNotExists(): bool
     {
-        if (!(bool)MainDB::run("SHOW TABLES LIKE '{$this->tableName}'")->fetch()) {
-            return (bool)MainDB::db_query("CREATE TABLE {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE KEY _designation (designation) );", $this->dbConfig);
+        try {
+            MainDB::db_query("SELECT designation FROM {$this->tableName} LIMIT 1", $this->dbConfig);
+        } catch (\Exception $e) {
+            return (bool)MainDB::db_query("CREATE TABLE {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", $this->dbConfig);
         }
         return true;
     }
