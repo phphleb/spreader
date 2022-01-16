@@ -103,8 +103,8 @@ class DbConfigTransfer implements TransferInterface
     {
         try {
             MainDB::db_query("SELECT designation FROM {$this->tableName} LIMIT 1", $this->dbConfig);
-        } catch (\Exception $e) {
-            return (bool)MainDB::db_query("CREATE TABLE {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", $this->dbConfig);
+        } catch (\Throwable $e) {
+            return (bool)MainDB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", $this->dbConfig);
         }
         return true;
     }
