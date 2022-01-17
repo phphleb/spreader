@@ -52,6 +52,11 @@ class ConfigTransfer implements TransferInterface
         return $this->transferMethod->remove();
     }
 
+    public function createConfigStorage(): TransferInterface
+    {
+        return $this->transferMethod->createConfigStorage();
+    }
+
     /**
      * @param string $path - path to the saved file.
      * @param string $target - the name of the library that requests saving.

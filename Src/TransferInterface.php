@@ -16,6 +16,6 @@ interface TransferInterface
 
     public function setTarget(string $path, string $libName): TransferInterface;
 
-    public function createConfigStorage(): bool;
+    public function createConfigStorage(): TransferInterface;
 }
 

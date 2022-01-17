@@ -97,9 +97,11 @@ class DbConfigTransfer implements TransferInterface
         return $this;
     }
 
-    public function createConfigStorage(): bool
+    public function createConfigStorage(): TransferInterface
     {
-       return $this->createTableIfNotExists();
+       $this->createTableIfNotExists();
+
+       return $this;
     }
 
     private function createTableIfNotExists(): bool
