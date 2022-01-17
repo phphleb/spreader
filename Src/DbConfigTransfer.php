@@ -25,8 +25,6 @@ class DbConfigTransfer implements TransferInterface
         $this->name = (defined("HLEB_CONFIG_SPREADER_NAME") ? htmlentities(HLEB_CONFIG_SPREADER_NAME) : self::DEFAULT_NAME);
 
         $this->dbConfig = defined("HLEB_SPREADER_TYPE_DB") ? HLEB_PARAMETERS_FOR_DB[HLEB_SPREADER_TYPE_DB] : null;
-
-        $this->createTableIfNotExists();
     }
 
     public function get($isUnaltered = false): ?array
@@ -99,14 +97,14 @@ class DbConfigTransfer implements TransferInterface
         return $this;
     }
 
+    public function createConfigStorage(): bool
+    {
+       return $this->createTableIfNotExists();
+    }
+
     private function createTableIfNotExists(): bool
     {
-        try {
-            MainDB::db_query("SELECT designation FROM {$this->tableName} LIMIT 1", $this->dbConfig);
-        } catch (\Throwable $e) {
-            return (bool)MainDB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", $this->dbConfig);
-        }
-        return true;
+        return (bool)MainDB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", $this->dbConfig);
     }
 
     private function getDataByDesignation(): ?string

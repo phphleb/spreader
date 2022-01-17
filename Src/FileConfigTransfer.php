@@ -50,6 +50,13 @@ class FileConfigTransfer implements TransferInterface
         return unlink($this->path);
     }
 
+    public function createConfigStorage(): bool
+    {
+        $this->createDirIfExists();
+
+        return true;
+    }
+
     public function setTarget(string $path, string $libName): TransferInterface
     {
         $this->path = $path;
