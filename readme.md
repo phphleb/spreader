@@ -42,7 +42,7 @@ define("HLEB_SPREADER_TYPE_DB", "mysql.myname");
 ```
 The name of the table being created in the database is `spreader_configs`.
 
-When changing the storage type, you must run the `php console phhleb/hlogin --add` command.
+When changing the storage type, you must run the `php console phphleb/hlogin --add` command.
 
 
 \* - Сonfiguration files for libraries "hlogin", "ucaptcha", "muller" and others.
