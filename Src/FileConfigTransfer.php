@@ -34,6 +34,7 @@ class FileConfigTransfer implements TransferInterface
 
     public function save(array $config): bool
     {
+        $this->createDirIfExists();
         if (!file_exists($this->path)) {
             $fp = fopen($this->path, "w");
             $result = fwrite($fp, (new JsonConverter($config))->get());
