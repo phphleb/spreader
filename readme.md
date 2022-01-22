@@ -44,6 +44,8 @@ The name of the table being created in the database is `spreader_configs`.
 
 When changing the storage type, you must run the `php console phphleb/hlogin --add` command.
 
+Supported  __MySQL__ / __MariaDB__ / __PostgreSQL__.
+
 
 \* - Сonfiguration files for libraries "hlogin", "ucaptcha", "muller" and others.
 
