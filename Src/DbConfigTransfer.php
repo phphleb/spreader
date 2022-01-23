@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace Phphleb\Spreader\Src;
 
 
-use Hleb\Main\MainDB;
+use Hleb\Main\DB;
 
 class DbConfigTransfer implements TransferInterface
 {
@@ -16,7 +16,7 @@ class DbConfigTransfer implements TransferInterface
 
     private ?string $target = null;
 
-    private ?array $dbConfig;
+    private ?string $dbConfig = null;
 
     private ?array $data = null;
 
@@ -24,7 +24,7 @@ class DbConfigTransfer implements TransferInterface
     {
         $this->name = (defined("HLEB_CONFIG_SPREADER_NAME") ? htmlentities(HLEB_CONFIG_SPREADER_NAME) : self::DEFAULT_NAME);
 
-        $this->dbConfig = defined("HLEB_SPREADER_TYPE_DB") ? HLEB_PARAMETERS_FOR_DB[HLEB_SPREADER_TYPE_DB] : null;
+        $this->dbConfig = defined("HLEB_SPREADER_TYPE_DB") ? HLEB_SPREADER_TYPE_DB : null;
     }
 
     public function get($isUnaltered = false): ?array
@@ -56,7 +56,7 @@ class DbConfigTransfer implements TransferInterface
         }
         $data[$this->target] = $config;
         if (!$content) {
-            return (bool)MainDB::run("INSERT INTO {$this->tableName} (designation, content) VALUES ('{$this->name}', '" . json_encode($data) . "');", $this->dbConfig)->fetch();
+            return (bool)self::run("INSERT INTO {$this->tableName} (designation, content) VALUES ('{$this->name}', '" . json_encode($data) . "');", $this->dbConfig)->fetch();
         }
         return false;
     }
@@ -75,15 +75,15 @@ class DbConfigTransfer implements TransferInterface
         }
         $data[$this->target] = $config;
         if (!$content) {
-            return (bool)MainDB::run("INSERT INTO {$this->tableName} (designation, content) VALUES ('{$this->name}', '" . json_encode($data) . "');", $this->dbConfig)->fetch();
+            return (bool)self::run("INSERT INTO {$this->tableName} (designation, content) VALUES ('{$this->name}', '" . json_encode($data) . "');", $this->dbConfig)->fetch();
         }
-        return (bool)MainDB::run("UPDATE {$this->tableName} SET content = ? WHERE designation = ?", [json_encode($data), $this->name], $this->dbConfig)->fetch();
+        return (bool)self::run("UPDATE {$this->tableName} SET content = ? WHERE designation = ?", [json_encode($data), $this->name], $this->dbConfig)->fetch();
     }
 
     public function remove(): bool
     {
         try {
-            return MainDB::run("DELETE FROM {$this->tableName} WHERE designation = ?", [$this->name], $this->dbConfig)->fetchColumn();
+            return self::run("DELETE FROM {$this->tableName} WHERE designation = ?", [$this->name], $this->dbConfig)->fetchColumn();
         } catch (\Throwable $e) {
             error_log($e->getMessage());
         }
@@ -106,12 +106,25 @@ class DbConfigTransfer implements TransferInterface
 
     private function createTableIfNotExists(): bool
     {
-        return (bool)MainDB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", $this->dbConfig);
+        return (bool)DB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", $this->dbConfig);
     }
 
     private function getDataByDesignation(): ?string
     {
-        return MainDB::run("SELECT content FROM {$this->tableName} WHERE designation = ? LIMIT 1", [$this->name], $this->dbConfig)->fetchColumn() ?: null;
+        return self::run("SELECT content FROM {$this->tableName} WHERE designation = ? LIMIT 1", [$this->name], $this->dbConfig)->fetchColumn() ?: null;
+    }
+
+    protected static function run($sql, $args = [], $config = null): \PDO
+    {
+        if (empty(self::$pdo)) {
+            self::$pdo = DB::getPdoInstance($config);
+            self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            self::$pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+        }
+        self::$pdo = self::$pdo->prepare($sql);
+        self::$pdo->execute($args);
+
+        return self::$pdo;
     }
 
 }
