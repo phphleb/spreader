@@ -20,6 +20,8 @@ class DbConfigTransfer implements TransferInterface
 
     private ?array $data = null;
 
+    protected static ?\PDO $pdo = null;
+
     public function __construct()
     {
         $this->name = (defined("HLEB_CONFIG_SPREADER_NAME") ? htmlentities(HLEB_CONFIG_SPREADER_NAME) : self::DEFAULT_NAME);
@@ -106,7 +108,7 @@ class DbConfigTransfer implements TransferInterface
 
     private function createTableIfNotExists(): bool
     {
-        return (bool)DB::db_query("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", $this->dbConfig);
+        return (bool)self::run("CREATE TABLE IF NOT EXISTS {$this->tableName} (designation varchar(100) NOT NULL, content varchar(5000) NOT NULL, UNIQUE (designation) );", [], $this->dbConfig)->fetch();
     }
 
     private function getDataByDesignation(): ?string
