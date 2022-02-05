@@ -120,7 +120,7 @@ class DbConfigTransfer implements TransferInterface
     protected static function run($sql, $args = [], $config = null): \PDOStatement
     {
         if (empty(self::$pdo)) {
-            self::$pdo = DB::getPdoInstance($config);
+            self::$pdo = DB::getNewPdoInstance($config);
             self::$pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             self::$pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
         }
