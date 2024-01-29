@@ -1,9 +1,10 @@
 {
   "name": "phphleb/spreader",
-  "description": "Allows you to choose the method to use the configs for PHP Micro-Framework HLEB",
+  "description": "Allows you to choose the method to use the configs for PHP Framework HLEB2",
   "type": "library",
   "keywords": [
-    "php"
+    "php",
+    "hleb2"
   ],
   "license": "MIT",
   "authors": [
@@ -13,10 +14,12 @@
     }
   ],
   "require": {
-    "php": ">=7.4.0",
-    "phphleb/framework": ">=1.5.82",
+    "php": ">=8.2.0",
+    "phphleb/framework": ">=2.0.0",
     "phphleb/nicejson": "dev-main",
-    "ext-json": "*"
+    "phphleb/updater": "*",
+    "ext-json": "*",
+    "ext-pdo": "*"
   },
   "autoload": {
     "psr-4": {

@@ -1,0 +1,13 @@
+{
+  "component": "phphleb/spreader",
+  "name": "Remote global configuration",
+  "description": "Steps for working with the global project clone setting.",
+  "directory": "match-directory",
+  "settings": {
+    "spreader": {
+      "name": "synchronization",
+      "default": "base",
+      "select": ["base"]
+    }
+  }
+}

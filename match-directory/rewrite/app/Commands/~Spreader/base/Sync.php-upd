@@ -1,0 +1,28 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Commands\Spreader;
+
+use Hleb\Base\Task;
+use Phphleb\Spreader\Src\SyncCommand;
+
+class Sync extends Task
+{
+    /**
+     * Synchronization of all deployed project library configurations.
+     * These configurations are located in /storage/lib.
+     * If the global configuration storage type is selected in the framework settings,
+     * for example in the database, then all configuration data in the database will be changed to
+     * file configurations from the current project in which the command is run.
+     *
+     * Синхронизация всех развёрнутых конфигураций библиотек проекта.
+     * Эти конфигурации находятся по пути /storage/lib.
+     * Если в настройках фреймворка выбран глобальный тип хранения конфигурации,
+     * например в БД, то все данные конфигураций в базе данных будут изменены на
+     * файловые конфигурации из текущего проекта, в котором запущена команда.
+     */
+    protected function run(): int
+    {
+       return (int)!(new SyncCommand())->run();
+    }
+}

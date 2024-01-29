@@ -1,0 +1,24 @@
+<?php
+declare(strict_types=1);
+
+namespace App\Commands\Spreader;
+
+use Hleb\Base\Task;
+use Phphleb\Spreader\Src\ReportCommand;
+
+class Report extends Task
+{
+    /**
+     * Displaying preliminary information
+     * about the upcoming data transfer.
+     *
+     * Вывод предварительной информации
+     * о предстоящем переносе данных.
+     */
+    protected function run(): int
+    {
+       (new ReportCommand())->run();
+
+       return self::SUCCESS_CODE;
+    }
+}

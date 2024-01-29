@@ -1,55 +1,66 @@
-### Sets the method to save various configs* for Micro-Framework HLEB
 
-By default, saving to files does not require configuration.
+### Удалённое конфигурирование для библиотек фреймворка HLEB2
 
-To save to the database and use one config for several project replications.
+[![HLEB2](https://img.shields.io/badge/HLEB-2-darkcyan)](https://github.com/phphleb/hleb) ![PHP](https://img.shields.io/badge/PHP-^8.2-blue) [![License: MIT](https://img.shields.io/badge/License-MIT%20(Free)-brightgreen.svg)](https://github.com/phphleb/hleb/blob/master/LICENSE)
+
+Позволяет создать общую конфигурацию для библиотек, в том числе использующих
+настраиваемую пользователем конфигурацию.
+Это может понадобиться при распределении нагрузки на несколько одинаковых клонов проекта,
+в таком случае у них должна быть общая внешняя конфигурация.
+
+Например, в библиотеке Hlogin через веб-интерфейс администратором изменён тип дизайна
+регистрации, это изменение должно быть применено ко всем клонам проекта одновременно.
+Библиотека phphleb/spreader добавляет общий тип хранения конфигурации в базе данных.
+Для этого вам нужно переключить настройку фреймворка в тип 'DB' и указать идентификатор базы данных.
+
+
+Для сохранения конфигурации в базу данных используйте следующие настройки:
 ```php
-// File ./start.hleb.php
+// File /config/common.php
 
 /*
- |-----------------------------------------------------------------------------
- | Selecting the type of configs storage ("File" or "Db")
- |-----------------------------------------------------------------------------
- | Выбор типа хранения конфигов ("File" или "Db")
- |-----------------------------------------------------------------------------
+ │-----------------------------------------------------------------------------
+ │ Selecting the type of configs storage ("File" or "DB")
+ │-----------------------------------------------------------------------------
+ │ Выбор типа хранения конфигов ("File" или "DB")
+ │-----------------------------------------------------------------------------
  */
-define("HLEB_CONFIG_SPREADER_TYPE", "Db");
+'spread.config.type' => 'DB',
 
-/*
- |-----------------------------------------------------------------------------
- | The name of the current connection, matches will be grouped
- | with the overall configuration. Максимальное количество символов - 100.
- |-----------------------------------------------------------------------------
- | Имя текущего подключения, совпадения будут сгруппированы
- | с общей конфигурацией. Maximum character limit - 100.
- |-----------------------------------------------------------------------------
- */
-define("HLEB_CONFIG_SPREADER_NAME", "connection-name");
 ```
+
 ```php
-// File ./console
 
-define("HLEB_CONFIG_SPREADER_TYPE", "Db");
-define("HLEB_CONFIG_SPREADER_NAME", "connection-name");
+// File /config/database.php
 
+return [
+'spread.db.type' => 'mysql.name',
+// ,,, //
+];
 ```
-```php
-// File ./database/dbase.config.php
-
-// Optionally, you can select the type of connection from the resource /database/dbase.config.php
-define("HLEB_SPREADER_TYPE_DB", "mysql.myname");
-
+Для начальной синхронизации всех конфигураций можно использовать специальную консольную команду.
+Установка команды в проект:
+```bash
+php console phphleb/spreader add
 ```
-The name of the table being created in the database is `spreader_configs`.
+Перенос конфигурации из файлов в выбранный тип (`DB`):
+```bash
+php console spreader/sync
+```
+Эта команда может пригодиться при первоначальном развертывании проекта,
+она делает конфигурацию текущего проекта общей для всех его клонов.
 
-When changing the storage type, you must run the `php console phphleb/hlogin --add` command.
+Предварительно можно вывести данные для переноса следующей командой:
+```bash
+php console spreader/report
+```
 
-Supported  __MySQL__ / __MariaDB__ / __PostgreSQL__.
+В случае, если вы хотите использовать этот механизм для своей библиотеки,
+то нужно получение/сохранение конфигурации в ней реализовать через
+класс Phphleb\Spreader\Transfer.
 
 
-\* - Сonfiguration files for libraries "hlogin", "ucaptcha", "muller" and others.
-
-------------------------------
-
-[![License: MIT](https://img.shields.io/badge/License-MIT%20(Free)-brightgreen.svg)](https://github.com/phphleb/draft/blob/main/LICENSE) ![PHP](https://img.shields.io/badge/PHP-^7.4.0-blue) ![PHP](https://img.shields.io/badge/PHP-8-blue) 
+При выборе типа `File` будет использовано хранение конфигурации по умолчанию, в файлах по пути /storage/lib/.
+Для типа `DB` данные будут перенесены в таблицу `hleb_spreader_conf`.
+Проверена поддержка  __MySQL__ / __MariaDB__ / __PostgreSQL__.
 
