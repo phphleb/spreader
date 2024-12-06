@@ -25,6 +25,5 @@
     "psr-4": {
       "Phphleb\\Spreader\\": "/"
     }
-  },
-  "minimum-stability": "dev"
+  }
 }
