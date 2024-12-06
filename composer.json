@@ -16,7 +16,7 @@
   "require": {
     "php": ">=8.2.0",
     "phphleb/framework": ">=2.0.0",
-    "phphleb/nicejson": "dev-main",
+    "phphleb/nicejson": "*",
     "phphleb/updater": "*",
     "ext-json": "*",
     "ext-pdo": "*"
